@@ -1,0 +1,17 @@
+{
+  "name": "legado",
+  "version": "1.0.0",
+  "description": "LEGADO - plataforma mínima para publicar una única historia larga",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "cookie-parser": "^1.4.6",
+    "dotenv": "^16.4.0",
+    "express": "^4.19.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^7.8.0"
+  }
+}

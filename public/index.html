@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LEGADO - Iniciar sesión</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body data-page="login">
+  <main class="container">
+    <h1>LEGADO</h1>
+    <p>Un lugar para publicar una historia que merezca existir.</p>
+
+    <form id="login-form" class="card">
+      <h2>Iniciar sesión</h2>
+      <label>
+        Email
+        <input type="email" id="login-email" required />
+      </label>
+      <label>
+        Contraseña
+        <input type="password" id="login-password" required />
+      </label>
+      <button type="submit">Entrar</button>
+      <p class="small">
+        ¿No tienes cuenta?
+        <a href="/register.html">Crear cuenta</a>
+      </p>
+      <div id="login-message" class="message"></div>
+    </form>
+  </main>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

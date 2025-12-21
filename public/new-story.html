@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LEGADO - Tu historia</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body data-page="new-story">
+  <main class="container">
+    <header class="header">
+      <h1>Tu historia en LEGADO</h1>
+      <a href="/index.html" class="small">Volver a inicio</a>
+    </header>
+
+    <section class="card">
+      <form id="story-form">
+        <label>
+          Título
+          <input type="text" id="story-title" required />
+        </label>
+        <label>
+          Historia (mínimo 500 caracteres)
+          <textarea id="story-body" rows="18" required></textarea>
+        </label>
+
+        <div class="actions">
+          <button type="button" id="save-draft-btn">Guardar borrador</button>
+          <button type="button" id="publish-btn" class="primary">Publicar historia</button>
+        </div>
+        <p class="small" id="publish-note">
+          Al publicar, se guarda la versión actual y el texto queda congelado.
+        </p>
+      </form>
+
+      <p id="story-status" class="small"></p>
+      <p id="public-url-container" class="small hidden">
+        Tu historia está publicada en:
+        <a id="public-url" href="#" target="_blank" rel="noopener noreferrer"></a>
+      </p>
+      <div id="story-message" class="message"></div>
+    </section>
+  </main>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>

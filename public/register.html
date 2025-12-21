@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LEGADO - Registro</title>
+  <link rel="stylesheet" href="/css/styles.css" />
+</head>
+<body data-page="register">
+  <main class="container">
+    <h1>LEGADO</h1>
+
+    <form id="register-form" class="card">
+      <h2>Crear cuenta</h2>
+      <label>
+        Email
+        <input type="email" id="register-email" required />
+      </label>
+      <label>
+        Contraseña
+        <input type="password" id="register-password" required />
+      </label>
+      <button type="submit">Registrarme</button>
+      <p class="small">
+        ¿Ya tienes cuenta?
+        <a href="/index.html">Iniciar sesión</a>
+      </p>
+      <div id="register-message" class="message"></div>
+    </form>
+  </main>
+
+  <script src="/js/main.js"></script>
+</body>
+</html>
