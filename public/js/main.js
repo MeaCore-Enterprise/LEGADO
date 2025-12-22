@@ -246,9 +246,39 @@ async function handleNewStoryPage() {
         return;
       }
 
-      setMessage(messageEl, 'Publicando historia...', '');
+      // Guardar automáticamente el borrador actual antes de publicar
+      const title = titleInput.value.trim();
+      const body = bodyTextarea.value;
+
+      setMessage(messageEl, 'Guardando borrador antes de publicar...', '');
 
       try {
+        const saveRes = await fetch('/api/stories', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          credentials: 'include',
+          body: JSON.stringify({ title, body }),
+        });
+
+        if (saveRes.status === 401) {
+          window.location.href = '/index.html';
+          return;
+        }
+
+        if (saveRes.status !== 200) {
+          setMessage(
+            messageEl,
+            'Debes guardar un borrador válido antes de publicar.',
+            'error'
+          );
+          return;
+        }
+
+        // Solo si el borrador se guardó correctamente, intentar publicar
+        setMessage(messageEl, 'Publicando historia...', '');
+
         const res = await fetch('/api/stories/publish', {
           method: 'POST',
           credentials: 'include',
@@ -281,7 +311,11 @@ async function handleNewStoryPage() {
           setMessage(messageEl, 'Error al publicar historia', 'error');
         }
       } catch (err) {
-        setMessage(messageEl, 'Error de red al publicar historia', 'error');
+        setMessage(
+          messageEl,
+          'Error de red al guardar borrador o publicar historia',
+          'error'
+        );
       }
     });
   }
@@ -336,9 +370,53 @@ async function handleStoriesListPage() {
   if (!listEl || !messageEl) return;
 
   listEl.innerHTML = '';
-  setMessage(messageEl, 'Cargando historias publicadas...', '');
+  const showGateMessage = () => {
+    listEl.innerHTML = '';
+    setMessage(
+      messageEl,
+      'Para leer historias de otros, primero debes publicar la tuya.',
+      ''
+    );
+
+    const li = document.createElement('li');
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.textContent = 'Crear mi historia';
+    btn.addEventListener('click', () => {
+      window.location.href = '/new-story.html';
+    });
+
+    li.appendChild(btn);
+    listEl.appendChild(li);
+  };
+
+  setMessage(messageEl, 'Verificando tu historia...', '');
 
   try {
+    const meRes = await fetch('/api/stories/me', {
+      credentials: 'include',
+    });
+
+    if (meRes.status === 401 || meRes.status === 404) {
+      showGateMessage();
+      return;
+    }
+
+    if (meRes.status !== 200) {
+      setMessage(messageEl, 'Error al verificar tu historia', 'error');
+      return;
+    }
+
+    const meData = await meRes.json().catch(() => null);
+
+    if (!meData || !meData.publishedAt) {
+      showGateMessage();
+      return;
+    }
+
+    // El usuario tiene al menos una historia publicada; cargar listado público
+    setMessage(messageEl, 'Cargando historias publicadas...', '');
+
     const res = await fetch('/api/stories/public');
 
     if (res.status !== 200) {
@@ -374,7 +452,11 @@ async function handleStoriesListPage() {
       listEl.appendChild(li);
     });
   } catch (err) {
-    setMessage(messageEl, 'Error de red al cargar historias publicadas', 'error');
+    setMessage(
+      messageEl,
+      'Error de red al verificar tu historia o cargar historias publicadas',
+      'error'
+    );
   }
 }
 
