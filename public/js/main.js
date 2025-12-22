@@ -270,6 +270,7 @@ async function handleNewStoryPage() {
           );
           disableStoryEditing();
           showPublicUrl(data.slug);
+          window.location.href = '/stories.html';
         } else if (res.status === 400) {
           setMessage(
             messageEl,
@@ -328,6 +329,55 @@ async function handlePublicStoryPage() {
   }
 }
 
+async function handleStoriesListPage() {
+  const listEl = document.getElementById('stories-list');
+  const messageEl = document.getElementById('stories-message');
+
+  if (!listEl || !messageEl) return;
+
+  listEl.innerHTML = '';
+  setMessage(messageEl, 'Cargando historias publicadas...', '');
+
+  try {
+    const res = await fetch('/api/stories/public');
+
+    if (res.status !== 200) {
+      setMessage(messageEl, 'Error al cargar historias publicadas', 'error');
+      return;
+    }
+
+    const data = await res.json().catch(() => []);
+
+    if (!Array.isArray(data) || data.length === 0) {
+      setMessage(messageEl, 'Aún no hay historias publicadas.', '');
+      return;
+    }
+
+    setMessage(messageEl, '', '');
+
+    data.forEach((story) => {
+      const li = document.createElement('li');
+
+      const link = document.createElement('a');
+      link.href = `/s/${encodeURIComponent(story.slug)}`;
+      link.textContent = story.title || '';
+
+      const meta = document.createElement('span');
+      meta.className = 'small';
+      if (story.publishedAt) {
+        const d = new Date(story.publishedAt);
+        meta.textContent = ` — ${d.toLocaleDateString()}`;
+      }
+
+      li.appendChild(link);
+      li.appendChild(meta);
+      listEl.appendChild(li);
+    });
+  } catch (err) {
+    setMessage(messageEl, 'Error de red al cargar historias publicadas', 'error');
+  }
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   const page = document.body.dataset.page;
 
@@ -339,5 +389,7 @@ document.addEventListener('DOMContentLoaded', () => {
     handleNewStoryPage();
   } else if (page === 'public-story') {
     handlePublicStoryPage();
+  } else if (page === 'stories') {
+    handleStoriesListPage();
   }
 });

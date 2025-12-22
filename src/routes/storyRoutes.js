@@ -7,6 +7,7 @@ const router = express.Router();
 router.post('/', auth, storyController.upsertDraft);
 router.get('/me', auth, storyController.getMyStory);
 router.post('/publish', auth, storyController.publishMyStory);
+router.get('/public', storyController.listPublicStories);
 router.get('/public/:slug', storyController.getPublicStoryBySlug);
 
 module.exports = router;

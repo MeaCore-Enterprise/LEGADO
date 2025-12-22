@@ -178,3 +178,23 @@ exports.getPublicStoryBySlug = async (req, res) => {
     return res.status(500).json({ message: 'Error al obtener historia pública' });
   }
 };
+
+exports.listPublicStories = async (req, res) => {
+  try {
+    const stories = await Story.find({ publishedAt: { $ne: null } })
+      .sort({ publishedAt: -1 })
+      .select('title slug publishedAt')
+      .lean();
+
+    const result = stories.map((story) => ({
+      title: story.title,
+      slug: story.slug,
+      publishedAt: story.publishedAt,
+    }));
+
+    return res.status(200).json(result);
+  } catch (err) {
+    console.error('Error en listPublicStories:', err);
+    return res.status(500).json({ message: 'Error al listar historias públicas' });
+  }
+};
